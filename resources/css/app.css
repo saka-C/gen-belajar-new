@@ -6,6 +6,13 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    /* Mengubah font sans-serif bawaan (Global) menjadi Montserrat */
+    --font-sans: 'Montserrat', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+
+    /* Menambahkan font secondary baru bernama 'inter' */
+    --font-inter: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+    --color-base: #F9F9F9;
+    --color-primary: #e31d1d;
+    
 }
