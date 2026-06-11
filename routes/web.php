@@ -16,3 +16,7 @@ Route::get('/artikel', function () {
     return view('pages.artikel');
 });
 
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login');
+

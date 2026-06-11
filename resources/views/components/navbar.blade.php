@@ -24,9 +24,9 @@
             <a href="/kontak" class="{{ request()->is('kontak') ? 'text-primary font-bold underline decoration-2 underline-offset-8' : 'text-[#5f5e5e] font-semibold' }} text-sm tracking-[0.70px] hover:text-[#ba000c] transition-all">Kontak</a>
         </div>
 
-        <button class="hidden md:inline-flex font-inter items-center justify-center px-8 py-3 bg-primary rounded-full text-white text-sm font-normal tracking-[0.70px] shadow-[0px_4px_6px_-1px_#0000001a] hover:bg-[#ba000c] transition-colors cursor-pointer">
+        <a href="/login" class="hidden md:inline-flex font-inter items-center justify-center px-8 py-3 bg-primary rounded-full text-white text-sm font-normal tracking-[0.70px] shadow-[0px_4px_6px_-1px_#0000001a] hover:bg-[#ba000c] transition-colors cursor-pointer">
             Bergabung
-        </button>
+        </a>
 
         <button id="hamburger-btn" class="flex md:hidden flex-col justify-center items-center w-8 h-8 gap-2 relative z-50 cursor-pointer focus:outline-none" aria-label="Toggle Menu">
             <span id="line-top" class="w-6 h-0.5 bg-[#5f5e5e] transition-all duration-300 ease-in-out transform origin-center"></span>
@@ -44,9 +44,9 @@
         <a href="/kontak" class="{{ request()->is('kontak') ? 'text-primary font-bold' : 'text-[#5f5e5e]' }} py-2 transition-all border-b border-gray-100">Kontak</a>
     </nav>
 
-    <button class="w-full mt-4 font-inter py-3 bg-primary rounded-full text-white text-center text-sm font-normal shadow-md hover:bg-[#ba000c] transition-colors cursor-pointer">
+    <a href="/login" class="w-full mt-4 font-inter py-3 bg-primary rounded-full text-white text-center text-sm font-normal shadow-md hover:bg-[#ba000c] transition-colors cursor-pointer">
         Bergabung
-    </button>
+    </a>
 </div>
 
 <div id="sidebar-overlay" class="fixed inset-0 bg-black/40 z-30 hidden md:hidden opacity-0 transition-opacity duration-300"></div>
