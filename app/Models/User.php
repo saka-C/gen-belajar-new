@@ -1,49 +1,52 @@
 <?php
 
+/**
+ * Created by Reliese Model.
+ */
+
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable
+/**
+ * Class User
+ * 
+ * @property int $user_id
+ * @property string $username
+ * @property string $email
+ * @property string|null $password_hash
+ * @property string|null $google_id
+ * @property string|null $auth_provider
+ * @property string|null $role
+ * 
+ * @property Collection|Donation[] $donations
+ * @property Profile|null $profile
+ *
+ * @package App\Models
+ */
+class User extends Model
 {
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+	protected $table = 'users';
+	protected $primaryKey = 'user_id';
+	public $timestamps = false;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+	protected $fillable = [
+		'username',
+		'email',
+		'password_hash',
+		'google_id',
+		'auth_provider',
+		'role'
+	];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+	public function donations()
+	{
+		return $this->hasMany(Donation::class);
+	}
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+	public function profile()
+	{
+		return $this->hasOne(Profile::class);
+	}
 }
