@@ -1,0 +1,512 @@
+@extends('layouts.app')
+
+@section('title', 'Detail Donasi - Gen Belajar')
+
+@section('content')
+
+{{-- ===================== HERO SECTION ===================== --}}
+<div class="bg-gray-50 pt-8 px-4 sm:px-6 lg:px-8 mb-20">
+    <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-20">
+
+            {{-- ===================== LEFT COLUMN: CONTENT ===================== --}}
+            <div class="lg:col-span-8 ">
+
+                {{-- Hero Image --}}
+                <div class="relative w-full h-64 sm:h-80 lg:h-96 bg-gradient-to-br from-green-100 to-green-300 rounded-3xl overflow-hidden shadow-md group">
+                    {{-- Image placeholder dengan gradient (ganti dengan img tag jika ada gambar) --}}
+                    <img
+                        src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=400&fit=crop"
+                        alt="Program Reforestasi Hutan Tropis"
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    >
+                    {{-- Overlay badge kategori --}}
+                    <div class="absolute top-4 left-4">
+                        <span class="inline-flex items-center gap-2 bg-red-600 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg">
+                            <span class="w-2 h-2 bg-white rounded-full"></span>
+                            Lingkungan
+                        </span>
+                    </div>
+                </div>
+
+                {{-- Program Header --}}
+                <div class="mt-8">
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight mb-3">
+                        Reforestasi Hutan Tropis Indonesia
+                    </h1>
+                    <p class="text-gray-600 text-base sm:text-lg">
+                        Inisiatif oleh
+                        <span class="font-semibold text-gray-900">Gen Belajar Foundation</span>
+                    </p>
+                </div>
+
+                {{-- Progress Bar Section --}}
+                <div class="mt-8 bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100">
+                    {{-- Progress metrics --}}
+                    <div class="grid grid-cols-3 gap-4 mb-6">
+                        <div>
+                            <p class="text-xs font-semibold text-gray-600 uppercase mb-1">Terkumpul</p>
+                            <p class="text-2xl sm:text-3xl font-extrabold text-gray-900">Rp 127 Juta</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-gray-600 uppercase mb-1">Target</p>
+                            <p class="text-2xl sm:text-3xl font-extrabold text-gray-900">Rp 200 Juta</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-gray-600 uppercase mb-1">Sisa Hari</p>
+                            <p class="text-2xl sm:text-3xl font-extrabold text-red-600">23</p>
+                        </div>
+                    </div>
+
+                    {{-- Progress bar --}}
+                    <div class="mb-4">
+                        <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden shadow-inner">
+                            <div class="bg-gradient-to-r from-red-500 to-red-600 h-full rounded-full transition-all duration-700 ease-out"
+                                 style="width: 63.5%;">
+                            </div>
+                        </div>
+                        <p class="text-right text-xs font-semibold text-gray-600 mt-2">63.5% Terkumpul</p>
+                    </div>
+
+                    {{-- Donors count --}}
+                    <div class="flex items-center gap-2 text-sm text-gray-600">
+                        <svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+                        </svg>
+                        <span>
+                            <span class="font-semibold text-gray-900">1,245</span> orang telah berdonasi
+                        </span>
+                    </div>
+                </div>
+
+                {{-- Tabs Navigation --}}
+                <div class="mt-8">
+                    <div class="flex gap-0 border-b border-gray-200">
+                        <button
+                            class="tab-button active px-6 py-4 text-sm sm:text-[16px] font-semibold text-gray-900 border-b-2 border-red-600 cursor-pointer transition-colors"
+                            data-tab="deskripsi">
+                            Deskripsi
+                        </button>
+                        <button
+                            class="tab-button px-6 py-4 text-sm sm:text-[16px] font-semibold text-gray-600 border-b-2 border-transparent hover:text-gray-900 cursor-pointer transition-colors"
+                            data-tab="kabar">
+                            Kabar Terbaru
+                        </button>
+                        <button
+                            class="tab-button px-6 py-4 text-sm sm:text-[16px] font-semibold text-gray-600 border-b-2 border-transparent hover:text-gray-900 cursor-pointer transition-colors"
+                            data-tab="donatur">
+                            Donatur
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Tab Content: Deskripsi --}}
+                <div id="tab-deskripsi" class="tab-content active mt-8 bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100">
+                    <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Tentang Program Ini</h3>
+                    <div class="space-y-6 text-gray-600 leading-relaxed">
+                        <p>
+                            Hutan tropis Indonesia adalah paru-paru dunia yang memberikan kontribusi signifikan terhadap regulasi iklim global.
+                            Namun, deforestasi dan kerusakan lingkungan terus mengancam ekosistem yang tak ternilai harganya ini.
+                        </p>
+                        <p>
+                            Program Reforestasi Hutan Tropis Indonesia kami bertujuan untuk menanam kembali lebih dari 100,000 pohon asli
+                            di berbagai wilayah yang telah mengalami kerusakan lingkungan. Setiap donasi Anda akan langsung berkontribusi
+                            pada pemulihan ekosistem dan peningkatan kualitas hidup masyarakat lokal.
+                        </p>
+
+                        {{-- <div class="bg-gray-50 rounded-xl p-4 sm:p-6 border border-gray-200 my-6">
+                            <h4 class="text-lg font-semibold text-gray-900 mb-4">Alokasi Dana</h4>
+                            <div class="space-y-4">
+                                <div class="flex items-start gap-4">
+                                    <div class="w-1/3">
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-green-500 h-2 rounded-full" style="width: 45%;"></div>
+                                        </div>
+                                        <p class="text-xs text-gray-600 font-semibold mt-1">45%</p>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-semibold text-gray-900">Pembelian & Penanaman Pohon</p>
+                                        <p class="text-xs text-gray-500">Rp 90 Juta</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start gap-4">
+                                    <div class="w-1/3">
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-blue-500 h-2 rounded-full" style="width: 30%;"></div>
+                                        </div>
+                                        <p class="text-xs text-gray-600 font-semibold mt-1">30%</p>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-semibold text-gray-900">Edukasi & Pelatihan Masyarakat</p>
+                                        <p class="text-xs text-gray-500">Rp 60 Juta</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start gap-4">
+                                    <div class="w-1/3">
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-purple-500 h-2 rounded-full" style="width: 15%;"></div>
+                                        </div>
+                                        <p class="text-xs text-gray-600 font-semibold mt-1">15%</p>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-semibold text-gray-900">Pemantauan & Evaluasi Program</p>
+                                        <p class="text-xs text-gray-500">Rp 30 Juta</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start gap-4">
+                                    <div class="w-1/3">
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-yellow-500 h-2 rounded-full" style="width: 10%;"></div>
+                                        </div>
+                                        <p class="text-xs text-gray-600 font-semibold mt-1">10%</p>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-semibold text-gray-900">Operasional & Administrasi</p>
+                                        <p class="text-xs text-gray-500">Rp 20 Juta</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> --}}
+
+                        <p>
+                            Dengan transparan penuh, kami melaporkan setiap penggunaan dana kepada donatur dan publik. Setiap tahapan
+                            program didokumentasikan dengan foto dan video, sehingga Anda dapat menyaksikan dampak nyata dari kontribusi
+                            Anda secara langsung.
+                        </p>
+                    </div>
+                </div>
+
+                {{-- Tab Content: Kabar Terbaru --}}
+                <div id="tab-kabar" class="tab-content hidden mt-8">
+                    <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100">
+                        <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-6">Kabar Terbaru</h3>
+                        <div class="space-y-6">
+                            {{-- News item 1 --}}
+                            <div class="border-l-4 border-red-500 pl-4 pb-6 border-b border-gray-200">
+                                <p class="text-xs font-semibold text-red-600 uppercase mb-1">15 Juni 2024</p>
+                                <h4 class="text-lg font-semibold text-gray-900 mb-2">Penanaman Pohon Fase 2 Dimulai!</h4>
+                                <p class="text-gray-600 text-sm leading-relaxed">
+                                    Kami telah berhasil menanam 25,000 pohon di fase pertama. Kini, kami melanjutkan dengan fase 2
+                                    di wilayah Kalimantan dengan target 30,000 pohon lagi. Terima kasih atas dukungan Anda!
+                                </p>
+                            </div>
+
+                            {{-- News item 2 --}}
+                            <div class="border-l-4 border-red-500 pl-4 pb-6 border-b border-gray-200">
+                                <p class="text-xs font-semibold text-red-600 uppercase mb-1">08 Juni 2024</p>
+                                <h4 class="text-lg font-semibold text-gray-900 mb-2">Kemitraan dengan Universitas Lokal</h4>
+                                <p class="text-gray-600 text-sm leading-relaxed">
+                                    Kami resmi menjalin kemitraan dengan 5 universitas di Indonesia untuk melibatkan mahasiswa
+                                    dalam program monitoring dan edukasi lingkungan.
+                                </p>
+                            </div>
+
+                            {{-- News item 3 --}}
+                            <div class="border-l-4 border-red-500 pl-4">
+                                <p class="text-xs font-semibold text-red-600 uppercase mb-1">01 Juni 2024</p>
+                                <h4 class="text-lg font-semibold text-gray-900 mb-2">Target 1000 Donatur Tercapai!</h4>
+                                <p class="text-gray-600 text-sm leading-relaxed">
+                                    Pencapaian luar biasa! Kami telah menerima dukungan dari lebih dari 1000 donatur yang peduli
+                                    dengan masa depan lingkungan kita.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Tab Content: Donatur --}}
+                <div id="tab-donatur" class="tab-content hidden mt-8">
+                    <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100">
+                        <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-6">Daftar Donatur</h3>
+                        <div class="space-y-4">
+                            {{-- Donor item 1 --}}
+                            <div class="flex items-start gap-4 pb-4 border-b border-gray-200">
+                                <div class="w-10 h-10 bg-gradient-to-br from-red-400 to-red-600 rounded-full flex-shrink-0 flex items-center justify-center">
+                                    <span class="text-white font-bold text-sm">AW</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-semibold text-gray-900 text-sm">Andi Wijaya</p>
+                                    <p class="text-gray-600 text-xs">Berdonasi Rp 500.000</p>
+                                </div>
+                                <span class="text-red-600 text-xs font-semibold">3 hari lalu</span>
+                            </div>
+
+                            {{-- Donor item 2 --}}
+                            <div class="flex items-start gap-4 pb-4 border-b border-gray-200">
+                                <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex-shrink-0 flex items-center justify-center">
+                                    <span class="text-white font-bold text-sm">SR</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-semibold text-gray-900 text-sm">Siti Rahayu</p>
+                                    <p class="text-gray-600 text-xs">Berdonasi Rp 1.000.000</p>
+                                </div>
+                                <span class="text-gray-500 text-xs font-semibold">1 minggu lalu</span>
+                            </div>
+
+                            {{-- Donor item 3 --}}
+                            <div class="flex items-start gap-4 pb-4 border-b border-gray-200">
+                                <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex-shrink-0 flex items-center justify-center">
+                                    <span class="text-white font-bold text-sm">BL</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-semibold text-gray-900 text-sm">Bambang Laksono</p>
+                                    <p class="text-gray-600 text-xs">Berdonasi Rp 2.500.000</p>
+                                </div>
+                                <span class="text-gray-500 text-xs font-semibold">2 minggu lalu</span>
+                            </div>
+
+                            {{-- Donor item 4 --}}
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex-shrink-0 flex items-center justify-center">
+                                    <span class="text-white font-bold text-sm">DE</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-semibold text-gray-900 text-sm">Dewi Ekawati</p>
+                                    <p class="text-gray-600 text-xs">Berdonasi Rp 750.000</p>
+                                </div>
+                                <span class="text-gray-500 text-xs font-semibold">3 minggu lalu</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            {{-- ===================== RIGHT COLUMN: STICKY DONATION CARD ===================== --}}
+            <div class="lg:col-span-4">
+                <div class="sticky top-24 bg-white rounded-3xl p-6 sm:p-7 shadow-lg border border-gray-100">
+
+                    {{-- Card title --}}
+                    <h3 class="text-lg font-bold text-gray-900 mb-6">Mulai Berdonasi</h3>
+
+                    {{-- Quick amount buttons --}}
+                    <div class="mb-6">
+                        <label class="block text-xs font-semibold text-gray-700 uppercase mb-3">Nominal Cepat</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button class="quick-amount-btn py-3 px-3 rounded-lg border-2 border-gray-200 bg-white text-gray-900 font-semibold text-xs hover:border-red-500 hover:bg-red-50 transition-all cursor-pointer" data-amount="20000">
+                                <span class="block">Rp</span>
+                                <span class="block text-lg">20K</span>
+                            </button>
+                            <button class="quick-amount-btn py-3 px-3 rounded-lg border-2 border-gray-200 bg-white text-gray-900 font-semibold text-xs hover:border-red-500 hover:bg-red-50 transition-all cursor-pointer" data-amount="50000">
+                                <span class="block">Rp</span>
+                                <span class="block text-lg">50K</span>
+                            </button>
+                            <button class="quick-amount-btn py-3 px-3 rounded-lg border-2 border-gray-200 bg-white text-gray-900 font-semibold text-xs hover:border-red-500 hover:bg-red-50 transition-all cursor-pointer" data-amount="100000">
+                                <span class="block">Rp</span>
+                                <span class="block text-lg">100K</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Custom amount input --}}
+                    <div class="mb-6">
+                        <label for="amount" class="block text-xs font-semibold text-gray-700 uppercase mb-2">Nominal Lainnya</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 font-semibold">Rp</span>
+                            <input
+                                type="number"
+                                id="amount"
+                                name="amount"
+                                placeholder="Masukkan nominal..."
+                                value=""
+                                class="w-full border-2 border-gray-200 rounded-xl pl-12 pr-4 py-3 text-gray-900 placeholder-gray-400 text-sm
+                                       focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all"
+                            >
+                        </div>
+                    </div>
+
+                    {{-- Message (optional) --}}
+                    <div class="mb-6">
+                        <label for="message" class="block text-xs font-semibold text-gray-700 uppercase mb-2">Pesan & Doa (Opsional)</label>
+                        <textarea
+                            id="message"
+                            name="message"
+                            rows="3"
+                            placeholder="Tinggalkan pesan dukungan Anda..."
+                            class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 text-sm resize-none
+                                   focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all"
+                        ></textarea>
+                    </div>
+
+                    {{-- Anonymous checkbox --}}
+                    <div class="mb-7 flex items-center gap-3">
+                        <input
+                            type="checkbox"
+                            id="anonymous"
+                            name="anonymous"
+                            class="w-4 h-4 rounded border-2 border-gray-300 text-red-600 focus:ring-2 focus:ring-red-200 cursor-pointer"
+                        >
+                        <label for="anonymous" class="text-xs text-gray-600 cursor-pointer">
+                            Donasi secara anonim
+                        </label>
+                    </div>
+
+                    {{-- CTA Button --}}
+                    <button
+                        id="donate-btn"
+                        class="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold py-3 px-6 rounded-xl
+                               transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2
+                               disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Donasi Sekarang
+                    </button>
+
+                    {{-- Info text --}}
+                    <p class="text-center text-xs text-gray-500 mt-4">
+                        Donasi Anda aman dan terenkripsi dengan sistem pembayaran terpercaya.
+                    </p>
+
+                    {{-- Trust badges --}}
+                    <div class="mt-4 pt-4 border-t border-gray-100 flex justify-center gap-3">
+                        <div class="flex items-center gap-1 text-xs text-gray-600">
+                            <i class="bx bx-check-shield"></i>
+                            Aman
+                        </div>
+                        <div class="flex items-center gap-1 text-xs text-gray-600">
+                            <i class="bx bx-check-shield"></i>
+                            Terpercaya
+                        </div>
+                        <div class="flex items-center gap-1 text-xs text-gray-600">
+                            <i class="bx bx-check-shield"></i>
+                            Cepat
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    // ===================== TAB NAVIGATION =====================
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const tabName = this.getAttribute('data-tab');
+
+            // Remove active state from all buttons and contents
+            tabButtons.forEach(btn => {
+                btn.classList.remove('active', 'border-red-600', 'text-gray-900');
+                btn.classList.add('border-transparent', 'text-gray-600');
+            });
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+                content.classList.add('hidden');
+            });
+
+            // Add active state to clicked button and corresponding content
+            this.classList.remove('border-transparent', 'text-gray-600');
+            this.classList.add('active', 'border-red-600', 'text-gray-900');
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        });
+    });
+
+    // ===================== QUICK AMOUNT BUTTONS =====================
+    const quickAmountButtons = document.querySelectorAll('.quick-amount-btn');
+    const amountInput = document.getElementById('amount');
+    const donateBtn = document.getElementById('donate-btn');
+
+    quickAmountButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const amount = this.getAttribute('data-amount');
+            amountInput.value = amount;
+
+            // Visual feedback
+            quickAmountButtons.forEach(btn => {
+                btn.classList.remove('border-red-500', 'bg-red-50');
+                btn.classList.add('border-gray-200', 'bg-white');
+            });
+            this.classList.remove('border-gray-200', 'bg-white');
+            this.classList.add('border-red-500', 'bg-red-50');
+
+            // Update button state
+            updateDonateButton();
+        });
+    });
+
+    // ===================== CUSTOM AMOUNT INPUT =====================
+    amountInput.addEventListener('input', function() {
+        // Remove selection from quick buttons
+        quickAmountButtons.forEach(btn => {
+            btn.classList.remove('border-red-500', 'bg-red-50');
+            btn.classList.add('border-gray-200', 'bg-white');
+        });
+
+        updateDonateButton();
+    });
+
+    function updateDonateButton() {
+        const amount = parseInt(amountInput.value) || 0;
+        donateBtn.disabled = amount < 1000;
+
+        if (amount > 0) {
+            const formattedAmount = new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(amount);
+            donateBtn.textContent = `Donasi ${formattedAmount}`;
+        } else {
+            donateBtn.innerHTML = `
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Donasi Sekarang
+            `;
+        }
+    }
+
+    // ===================== DONATE BUTTON ACTION =====================
+    donateBtn.addEventListener('click', function(e) {
+        const amount = parseInt(amountInput.value) || 0;
+        const message = document.getElementById('message').value;
+        const anonymous = document.getElementById('anonymous').checked;
+
+        if (amount < 1000) {
+            alert('Nominal donasi minimal Rp 1.000');
+            return;
+        }
+
+        // Show loading state
+        const originalContent = this.innerHTML;
+        this.disabled = true;
+        this.innerHTML = `
+            <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56" stroke-linecap="round"/>
+            </svg>
+            Memproses...
+        `;
+
+        // Simulasi proses (ganti dengan API call yang sebenarnya)
+        setTimeout(() => {
+            this.disabled = false;
+            this.innerHTML = originalContent;
+            alert(`Terima kasih! Donasi Rp ${amount.toLocaleString('id-ID')} Anda akan diproses.`);
+            amountInput.value = '';
+            document.getElementById('message').value = '';
+            document.getElementById('anonymous').checked = false;
+            updateDonateButton();
+        }, 2000);
+    });
+
+    // Initialize button state
+    updateDonateButton();
+});
+</script>
+@endpush

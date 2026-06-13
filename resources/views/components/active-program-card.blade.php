@@ -18,7 +18,7 @@
         </div>
         <div class="flex justify-between items-center">
             <span class="text-sm text-gray-500 flex items-center gap-1"><i class='bx bx-user'></i> {{ $donors }} Donatur</span>
-            <a href="#" class="text-primary font-bold">Donasi Sekarang &rarr;</a>
+            <a href="/detail" class="text-primary font-bold">Donasi Sekarang &rarr;</a>
         </div>
     </div>
 </div>

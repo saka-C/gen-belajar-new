@@ -15,7 +15,12 @@ Route::get('/program', function () {
 Route::get('/artikel', function () {
     return view('pages.artikel');
 });
-
+Route::get('/kontak', function () {
+    return view('pages.contact');
+});
+Route::get('/detail', function () {
+    return view('pages.detail-donation');
+});
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
