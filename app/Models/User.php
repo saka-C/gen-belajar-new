@@ -1,52 +1,48 @@
 <?php
 
-/**
- * Created by Reliese Model.
- */
-
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-/**
- * Class User
- * 
- * @property int $user_id
- * @property string $username
- * @property string $email
- * @property string|null $password_hash
- * @property string|null $google_id
- * @property string|null $auth_provider
- * @property string|null $role
- * 
- * @property Collection|Donation[] $donations
- * @property Profile|null $profile
- *
- * @package App\Models
- */
-class User extends Model
+class User extends Authenticatable
 {
-	protected $table = 'users';
-	protected $primaryKey = 'user_id';
-	public $timestamps = false;
+    use HasFactory, Notifiable;
 
-	protected $fillable = [
-		'username',
-		'email',
-		'password_hash',
-		'google_id',
-		'auth_provider',
-		'role'
-	];
+    protected $table = 'users';
+    protected $primaryKey = 'user_id';
 
-	public function donations()
-	{
-		return $this->hasMany(Donation::class);
-	}
+    public $timestamps = false;
 
-	public function profile()
-	{
-		return $this->hasOne(Profile::class);
-	}
+    protected $fillable = [
+        'username',
+        'email',
+        'password_hash',
+        'google_id',
+        'auth_provider',
+        'role',
+    ];
+
+    protected $hidden = [
+        'password_hash',
+    ];
+
+    /**
+     * Laravel akan memakai password_hash sebagai password.
+     */
+    public function getAuthPassword()
+    {
+        return $this->password_hash;
+    }
+
+    public function donations()
+    {
+        return $this->hasMany(Donation::class, 'user_id');
+    }
+
+    public function profile()
+    {
+        return $this->hasOne(Profile::class, 'user_id');
+    }
 }

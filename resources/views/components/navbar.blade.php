@@ -24,9 +24,43 @@
             <a href="/kontak" class="{{ request()->is('kontak') ? 'text-primary font-bold underline decoration-2 underline-offset-8' : 'text-[#5f5e5e] font-semibold' }} text-sm tracking-[0.70px] hover:text-[#ba000c] transition-all">Kontak</a>
         </div>
 
-        <a href="/login" class="hidden md:inline-flex font-inter items-center justify-center px-8 py-3 bg-primary rounded-full text-white text-sm font-normal tracking-[0.70px] shadow-[0px_4px_6px_-1px_#0000001a] hover:bg-[#ba000c] transition-colors cursor-pointer">
-            Bergabung
+    
+       @auth
+
+<div class="relative hidden md:block group">
+
+    <button class="inline-flex font-inter items-center justify-center px-8 py-3 bg-primary rounded-full text-white text-sm font-normal tracking-[0.70px] shadow-[0px_4px_6px_-1px_#0000001a] hover:bg-[#ba000c] transition-colors cursor-pointer">
+        Halo, {{ Auth::user()->username }}
+    </button>
+
+    <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg hidden group-hover:block overflow-hidden">
+
+        <a href="/dashboard" class="block px-5 py-3 hover:bg-gray-100">
+            Dashboard
         </a>
+
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+
+            <button type="submit" class="w-full text-left px-5 py-3 hover:bg-gray-100 text-red-600">
+                Logout
+            </button>
+        </form>
+
+    </div>
+
+</div>
+
+@else
+
+<a href="{{ route('login') }}"
+    class="hidden md:inline-flex font-inter items-center justify-center px-8 py-3 bg-primary rounded-full text-white text-sm font-normal tracking-[0.70px] shadow-[0px_4px_6px_-1px_#0000001a] hover:bg-[#ba000c] transition-colors cursor-pointer">
+
+    Bergabung
+
+</a>
+
+@endauth
 
         <button id="hamburger-btn" class="flex md:hidden flex-col justify-center items-center w-8 h-8 gap-2 relative z-50 cursor-pointer focus:outline-none" aria-label="Toggle Menu">
             <span id="line-top" class="w-6 h-0.5 bg-[#5f5e5e] transition-all duration-300 ease-in-out transform origin-center"></span>
@@ -44,9 +78,38 @@
         <a href="/kontak" class="{{ request()->is('kontak') ? 'text-primary font-bold' : 'text-[#5f5e5e]' }} py-2 transition-all border-b border-gray-100">Kontak</a>
     </nav>
 
-    <a href="/login" class="w-full mt-4 font-inter py-3 bg-primary rounded-full text-white text-center text-sm font-normal shadow-md hover:bg-[#ba000c] transition-colors cursor-pointer">
-        Bergabung
-    </a>
+   @auth
+
+<a href="/dashboard"
+    class="w-full mt-4 font-inter py-3 bg-primary rounded-full text-white text-center text-sm font-normal shadow-md hover:bg-[#ba000c] transition-colors cursor-pointer">
+
+    Dashboard
+
+</a>
+
+<form action="{{ route('logout') }}" method="POST">
+
+    @csrf
+
+    <button type="submit"
+        class="w-full mt-3 font-inter py-3 bg-red-600 rounded-full text-white text-center text-sm font-normal shadow-md hover:bg-red-700 transition-colors cursor-pointer">
+
+        Logout
+
+    </button>
+
+</form>
+
+@else
+
+<a href="{{ route('login') }}"
+    class="w-full mt-4 font-inter py-3 bg-primary rounded-full text-white text-center text-sm font-normal shadow-md hover:bg-[#ba000c] transition-colors cursor-pointer">
+
+    Bergabung
+
+</a>
+
+@endauth
 </div>
 
 <div id="sidebar-overlay" class="fixed inset-0 bg-black/40 z-30 hidden md:hidden opacity-0 transition-opacity duration-300"></div>
