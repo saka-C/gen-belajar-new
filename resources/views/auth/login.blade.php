@@ -1,3 +1,4 @@
+
 @extends('layouts.auth')
 
 @section('title', 'Masuk | Gen Belajar')
@@ -7,11 +8,18 @@
 
     <div class="flex w-full lg:w-1/2 items-center justify-center p-8 lg:p-20">
         <div class="w-full max-w-md">
+
             <div class="mb-10">
-                <h1 class="text-4xl font-bold text-gray-900 mb-3">Selamat Datang</h1>
-                <p class="text-gray-500">Silakan masuk ke akun Anda</p>
+                <h1 class="text-4xl font-bold text-gray-900 mb-3">
+                    Selamat Datang
+                </h1>
+
+                <p class="text-gray-500">
+                    Silakan masuk ke akun Anda
+                </p>
             </div>
 
+<<<<<<< HEAD
 <form action="{{ route('login.post') }}" method="POST" class="space-y-6">
     @csrf
 
@@ -62,13 +70,20 @@
             <p class="text-center text-sm text-gray-500 mt-8">
                 Belum punya akun? <a href="{{ route('register') }}" class="text-[#BA1A1A] font-bold hover:underline">Daftar sekarang</a>
             </p>
+
         </div>
     </div>
 
     <div class="hidden lg:block w-1/2 bg-gray-200 relative">
-        <img src="{{ asset('images/hero-bg.jpg') }}" alt="Login Image" class="absolute inset-0 h-full w-full object-cover">
+
+        <img src="{{ asset('images/hero-bg.jpg') }}"
+             alt="Login Image"
+             class="absolute inset-0 h-full w-full object-cover">
+
         <div class="absolute inset-0 bg-black/10"></div>
+
     </div>
 
 </div>
 @endsection
+
