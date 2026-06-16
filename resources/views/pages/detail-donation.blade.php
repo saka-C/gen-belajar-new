@@ -15,10 +15,19 @@
         $imageSrc = asset($imageSrc);
     }
 
-    $currentAmount = $campaign->collected_amount ?? 0;
+    $totalAllocated = $campaign->allocations()->sum('amount_used') ?? 0;
+    $currentAmount = ($campaign->collected_amount ?? 0) - $totalAllocated;
+    if ($currentAmount < 0) {
+        $currentAmount = 0;
+    }
     $targetAmount = $campaign->target_amount ?? 0;
     $percentage = $targetAmount > 0 ? min(100, round(($currentAmount / $targetAmount) * 100, 1)) : 0;
-    $statusText = in_array($campaign->status, ['completed', 'complete']) ? 'Selesai' : 'Aktif';
+    
+    $statusText = match ($campaign->status) {
+        'telah_disalurkan' => 'Telah Disalurkan',
+        'completed', 'complete' => 'Selesai',
+        default => 'Aktif',
+    };
 @endphp
 
 {{-- ===================== HERO SECTION ===================== --}}
@@ -262,120 +271,138 @@
             <div class="lg:col-span-4">
                 <div class="sticky top-24 bg-white rounded-3xl p-6 sm:p-7 shadow-lg border border-gray-100">
 
-                    {{-- Card title --}}
-                    <h3 class="text-lg font-bold text-gray-900 mb-6">Mulai Berdonasi</h3>
-
-                    {{-- Quick amount buttons --}}
-                    <div class="mb-6">
-                        <label class="block text-xs font-semibold text-gray-700 uppercase mb-3">Nominal Cepat</label>
-                        <div class="grid grid-cols-3 gap-2">
-                            <button class="quick-amount-btn py-3 px-3 rounded-lg border-2 border-gray-200 bg-white text-gray-900 font-semibold text-xs hover:border-red-500 hover:bg-red-50 transition-all cursor-pointer" data-amount="20000">
-                                <span class="block">Rp</span>
-                                <span class="block text-lg">20K</span>
-                            </button>
-                            <button class="quick-amount-btn py-3 px-3 rounded-lg border-2 border-gray-200 bg-white text-gray-900 font-semibold text-xs hover:border-red-500 hover:bg-red-50 transition-all cursor-pointer" data-amount="50000">
-                                <span class="block">Rp</span>
-                                <span class="block text-lg">50K</span>
-                            </button>
-                            <button class="quick-amount-btn py-3 px-3 rounded-lg border-2 border-gray-200 bg-white text-gray-900 font-semibold text-xs hover:border-red-500 hover:bg-red-50 transition-all cursor-pointer" data-amount="100000">
-                                <span class="block">Rp</span>
-                                <span class="block text-lg">100K</span>
-                            </button>
+                    @if (in_array($campaign->status, ['completed', 'complete', 'telah_disalurkan']))
+                        <div class="text-center py-8">
+                            <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4 text-[#BA1A1A]">
+                                <i class="bx bx-check-shield text-3xl"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">Program Selesai</h3>
+                            <p class="text-sm text-gray-500 mb-6 leading-relaxed">
+                                @if ($campaign->status === 'telah_disalurkan')
+                                    Terima kasih! Seluruh dana untuk program ini telah berhasil disalurkan kepada penerima manfaat.
+                                @else
+                                    Terima kasih! Target donasi program ini telah terpenuhi dan penggalangan dana telah ditutup.
+                                @endif
+                            </p>
+                            <a href="{{ route('program') }}" class="inline-flex w-full bg-[#BA1A1A] hover:bg-red-800 text-white font-semibold py-3 px-6 rounded-xl transition-all justify-center">
+                                Lihat Program Lainnya
+                            </a>
                         </div>
-                    </div>
+                    @else
+                        {{-- Card title --}}
+                        <h3 class="text-lg font-bold text-gray-900 mb-6">Mulai Berdonasi</h3>
 
-                    {{-- Custom amount input --}}
-                    <div class="mb-6">
-                        <label for="amount" class="block text-xs font-semibold text-gray-700 uppercase mb-2">Nominal Lainnya</label>
-                        <div class="relative">
-                            <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 font-semibold">Rp</span>
+                        {{-- Quick amount buttons --}}
+                        <div class="mb-6">
+                            <label class="block text-xs font-semibold text-gray-700 uppercase mb-3">Nominal Cepat</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button class="quick-amount-btn py-3 px-3 rounded-lg border-2 border-gray-200 bg-white text-gray-900 font-semibold text-xs hover:border-red-500 hover:bg-red-50 transition-all cursor-pointer" data-amount="20000">
+                                    <span class="block">Rp</span>
+                                    <span class="block text-lg">20K</span>
+                                </button>
+                                <button class="quick-amount-btn py-3 px-3 rounded-lg border-2 border-gray-200 bg-white text-gray-900 font-semibold text-xs hover:border-red-500 hover:bg-red-50 transition-all cursor-pointer" data-amount="50000">
+                                    <span class="block">Rp</span>
+                                    <span class="block text-lg">50K</span>
+                                </button>
+                                <button class="quick-amount-btn py-3 px-3 rounded-lg border-2 border-gray-200 bg-white text-gray-900 font-semibold text-xs hover:border-red-500 hover:bg-red-50 transition-all cursor-pointer" data-amount="100000">
+                                    <span class="block">Rp</span>
+                                    <span class="block text-lg">100K</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        {{-- Custom amount input --}}
+                        <div class="mb-6">
+                            <label for="amount" class="block text-xs font-semibold text-gray-700 uppercase mb-2">Nominal Lainnya</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 font-semibold">Rp</span>
+                                <input
+                                    type="number"
+                                    id="amount"
+                                    name="amount"
+                                    placeholder="Masukkan nominal..."
+                                    value=""
+                                    class="w-full border-2 border-gray-200 rounded-xl pl-12 pr-4 py-3 text-gray-900 placeholder-gray-400 text-sm
+                                           focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all"
+                                >
+                            </div>
+                        </div>
+
+                        {{-- Donor name --}}
+                        <div class="mb-6">
+                            <label for="guest_name" class="block text-xs font-semibold text-gray-700 uppercase mb-2">Nama Donatur</label>
                             <input
-                                type="number"
-                                id="amount"
-                                name="amount"
-                                placeholder="Masukkan nominal..."
-                                value=""
-                                class="w-full border-2 border-gray-200 rounded-xl pl-12 pr-4 py-3 text-gray-900 placeholder-gray-400 text-sm
+                                type="text"
+                                id="guest_name"
+                                name="guest_name"
+                                maxlength="100"
+                                placeholder="Nama Anda..."
+                                value="{{ auth()->user()->username ?? '' }}"
+                                class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 text-sm
                                        focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all"
                             >
                         </div>
-                    </div>
 
-                    {{-- Donor name --}}
-                    <div class="mb-6">
-                        <label for="guest_name" class="block text-xs font-semibold text-gray-700 uppercase mb-2">Nama Donatur</label>
-                        <input
-                            type="text"
-                            id="guest_name"
-                            name="guest_name"
-                            maxlength="100"
-                            placeholder="Nama Anda..."
-                            value="{{ auth()->user()->username ?? '' }}"
-                            class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 text-sm
-                                   focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all"
+                        {{-- Message (optional) --}}
+                        <div class="mb-6">
+                            <label for="message" class="block text-xs font-semibold text-gray-700 uppercase mb-2">Pesan & Doa (Opsional)</label>
+                            <textarea
+                                id="message"
+                                name="message"
+                                rows="3"
+                                placeholder="Tinggalkan pesan dukungan Anda..."
+                                class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 text-sm resize-none
+                                       focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all"
+                            ></textarea>
+                        </div>
+
+                        {{-- Anonymous checkbox --}}
+                        <div class="mb-7 flex items-center gap-3">
+                            <input
+                                type="checkbox"
+                                id="anonymous"
+                                name="anonymous"
+                                class="w-4 h-4 rounded border-2 border-gray-300 text-red-600 focus:ring-2 focus:ring-red-200 cursor-pointer"
+                            >
+                            <label for="anonymous" class="text-xs text-gray-600 cursor-pointer">
+                                Donasi secara anonim
+                            </label>
+                        </div>
+
+                        {{-- CTA Button --}}
+                        <button
+                            id="donate-btn"
+                            class="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold py-3 px-6 rounded-xl
+                                   transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2
+                                   disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                    </div>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Donasi Sekarang
+                        </button>
 
-                    {{-- Message (optional) --}}
-                    <div class="mb-6">
-                        <label for="message" class="block text-xs font-semibold text-gray-700 uppercase mb-2">Pesan & Doa (Opsional)</label>
-                        <textarea
-                            id="message"
-                            name="message"
-                            rows="3"
-                            placeholder="Tinggalkan pesan dukungan Anda..."
-                            class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 text-sm resize-none
-                                   focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all"
-                        ></textarea>
-                    </div>
+                        {{-- Info text --}}
+                        <p class="text-center text-xs text-gray-500 mt-4">
+                            Donasi Anda aman dan terenkripsi dengan sistem pembayaran terpercaya.
+                        </p>
 
-                    {{-- Anonymous checkbox --}}
-                    <div class="mb-7 flex items-center gap-3">
-                        <input
-                            type="checkbox"
-                            id="anonymous"
-                            name="anonymous"
-                            class="w-4 h-4 rounded border-2 border-gray-300 text-red-600 focus:ring-2 focus:ring-red-200 cursor-pointer"
-                        >
-                        <label for="anonymous" class="text-xs text-gray-600 cursor-pointer">
-                            Donasi secara anonim
-                        </label>
-                    </div>
-
-                    {{-- CTA Button --}}
-                    <button
-                        id="donate-btn"
-                        class="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold py-3 px-6 rounded-xl
-                               transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2
-                               disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        Donasi Sekarang
-                    </button>
-
-                    {{-- Info text --}}
-                    <p class="text-center text-xs text-gray-500 mt-4">
-                        Donasi Anda aman dan terenkripsi dengan sistem pembayaran terpercaya.
-                    </p>
-
-                    {{-- Trust badges --}}
-                    <div class="mt-4 pt-4 border-t border-gray-100 flex justify-center gap-3">
-                        <div class="flex items-center gap-1 text-xs text-gray-600">
-                            <i class="bx bx-check-shield"></i>
-                            Aman
+                        {{-- Trust badges --}}
+                        <div class="mt-4 pt-4 border-t border-gray-100 flex justify-center gap-3">
+                            <div class="flex items-center gap-1 text-xs text-gray-600">
+                                <i class="bx bx-check-shield"></i>
+                                Aman
+                            </div>
+                            <div class="flex items-center gap-1 text-xs text-gray-600">
+                                <i class="bx bx-check-shield"></i>
+                                Terpercaya
+                            </div>
+                            <div class="flex items-center gap-1 text-xs text-gray-600">
+                                <i class="bx bx-check-shield"></i>
+                                Cepat
+                            </div>
                         </div>
-                        <div class="flex items-center gap-1 text-xs text-gray-600">
-                            <i class="bx bx-check-shield"></i>
-                            Terpercaya
-                        </div>
-                        <div class="flex items-center gap-1 text-xs text-gray-600">
-                            <i class="bx bx-check-shield"></i>
-                            Cepat
-                        </div>
-                    </div>
-
+                    @endif
                 </div>
             </div>
 
@@ -428,152 +455,154 @@ document.addEventListener('DOMContentLoaded', function() {
     const amountInput = document.getElementById('amount');
     const donateBtn = document.getElementById('donate-btn');
 
-    quickAmountButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const amount = this.getAttribute('data-amount');
-            amountInput.value = amount;
+    if (donateBtn && amountInput) {
+        quickAmountButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const amount = this.getAttribute('data-amount');
+                amountInput.value = amount;
 
-            // Visual feedback
+                // Visual feedback
+                quickAmountButtons.forEach(btn => {
+                    btn.classList.remove('border-red-500', 'bg-red-50');
+                    btn.classList.add('border-gray-200', 'bg-white');
+                });
+                this.classList.remove('border-gray-200', 'bg-white');
+                this.classList.add('border-red-500', 'bg-red-50');
+
+                // Update button state
+                updateDonateButton();
+            });
+        });
+
+        // ===================== CUSTOM AMOUNT INPUT =====================
+        amountInput.addEventListener('input', function() {
+            // Remove selection from quick buttons
             quickAmountButtons.forEach(btn => {
                 btn.classList.remove('border-red-500', 'bg-red-50');
                 btn.classList.add('border-gray-200', 'bg-white');
             });
-            this.classList.remove('border-gray-200', 'bg-white');
-            this.classList.add('border-red-500', 'bg-red-50');
 
-            // Update button state
             updateDonateButton();
         });
-    });
 
-    // ===================== CUSTOM AMOUNT INPUT =====================
-    amountInput.addEventListener('input', function() {
-        // Remove selection from quick buttons
-        quickAmountButtons.forEach(btn => {
-            btn.classList.remove('border-red-500', 'bg-red-50');
-            btn.classList.add('border-gray-200', 'bg-white');
+        function updateDonateButton() {
+            const amount = parseInt(amountInput.value) || 0;
+            donateBtn.disabled = amount < 1000;
+
+            if (amount > 0) {
+                const formattedAmount = new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    minimumFractionDigits: 0
+                }).format(amount);
+                donateBtn.textContent = `Donasi ${formattedAmount}`;
+            } else {
+                donateBtn.innerHTML = `
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Donasi Sekarang
+                `;
+            }
+        }
+
+        // ===================== DONATE BUTTON ACTION =====================
+        donateBtn.addEventListener('click', async function(e) {
+            const amount = parseInt(amountInput.value) || 0;
+            const guestName = document.getElementById('guest_name').value;
+            const anonymous = document.getElementById('anonymous').checked;
+
+            if (amount < 1000) {
+                alert('Nominal donasi minimal Rp 1.000');
+                return;
+            }
+
+            // Show loading state
+            const originalContent = this.innerHTML;
+            this.disabled = true;
+            this.innerHTML = `
+                <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M21 12a9 9 0 1 1-6.219-8.56" stroke-linecap="round"/>
+                </svg>
+                Memproses...
+            `;
+
+            try {
+                const response = await fetch(createSnapUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                    body: JSON.stringify({
+                        campaign_id: campaignId,
+                        amount: amount,
+                        guest_name: guestName,
+                        is_anonymous: anonymous,
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (! response.ok) {
+                    throw new Error(data.message || 'Transaksi tidak dapat dibuat.');
+                }
+
+                if (! window.snap || ! data.snap_token) {
+                    if (data.redirect_url) {
+                        window.location.href = data.redirect_url;
+                        return;
+                    }
+
+                    throw new Error('Midtrans Snap belum siap. Muat ulang halaman lalu coba lagi.');
+                }
+
+                window.snap.pay(data.snap_token, {
+                    onSuccess: async function(result) {
+                        await refreshDonationStatus(data.order_id);
+                        alert('Terima kasih! Pembayaran donasi Anda berhasil.');
+                        window.location.reload();
+                    },
+                    onPending: async function(result) {
+                        await refreshDonationStatus(data.order_id);
+                        alert('Transaksi dibuat dan menunggu pembayaran.');
+                        window.location.reload();
+                    },
+                    onError: async function(result) {
+                        await refreshDonationStatus(data.order_id);
+                        alert('Pembayaran gagal. Silakan coba lagi.');
+                        window.location.reload();
+                    },
+                    onClose: function() {
+                        donateBtn.disabled = false;
+                        donateBtn.innerHTML = originalContent;
+                        updateDonateButton();
+                    },
+                });
+            } catch (error) {
+                this.disabled = false;
+                this.innerHTML = originalContent;
+                updateDonateButton();
+                alert(error.message || 'Terjadi kesalahan saat memproses donasi.');
+            }
         });
 
-        updateDonateButton();
-    });
-
-    function updateDonateButton() {
-        const amount = parseInt(amountInput.value) || 0;
-        donateBtn.disabled = amount < 1000;
-
-        if (amount > 0) {
-            const formattedAmount = new Intl.NumberFormat('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
-                minimumFractionDigits: 0
-            }).format(amount);
-            donateBtn.textContent = `Donasi ${formattedAmount}`;
-        } else {
-            donateBtn.innerHTML = `
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                Donasi Sekarang
-            `;
-        }
-    }
-
-    // ===================== DONATE BUTTON ACTION =====================
-    donateBtn.addEventListener('click', async function(e) {
-        const amount = parseInt(amountInput.value) || 0;
-        const guestName = document.getElementById('guest_name').value;
-        const anonymous = document.getElementById('anonymous').checked;
-
-        if (amount < 1000) {
-            alert('Nominal donasi minimal Rp 1.000');
-            return;
-        }
-
-        // Show loading state
-        const originalContent = this.innerHTML;
-        this.disabled = true;
-        this.innerHTML = `
-            <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M21 12a9 9 0 1 1-6.219-8.56" stroke-linecap="round"/>
-            </svg>
-            Memproses...
-        `;
-
-        try {
-            const response = await fetch(createSnapUrl, {
+        async function refreshDonationStatus(orderId) {
+            await fetch(refreshStatusUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
                     'X-CSRF-TOKEN': csrfToken,
                 },
-                body: JSON.stringify({
-                    campaign_id: campaignId,
-                    amount: amount,
-                    guest_name: guestName,
-                    is_anonymous: anonymous,
-                }),
+                body: JSON.stringify({ order_id: orderId }),
             });
-
-            const data = await response.json();
-
-            if (! response.ok) {
-                throw new Error(data.message || 'Transaksi tidak dapat dibuat.');
-            }
-
-            if (! window.snap || ! data.snap_token) {
-                if (data.redirect_url) {
-                    window.location.href = data.redirect_url;
-                    return;
-                }
-
-                throw new Error('Midtrans Snap belum siap. Muat ulang halaman lalu coba lagi.');
-            }
-
-            window.snap.pay(data.snap_token, {
-                onSuccess: async function(result) {
-                    await refreshDonationStatus(data.order_id);
-                    alert('Terima kasih! Pembayaran donasi Anda berhasil.');
-                    window.location.reload();
-                },
-                onPending: async function(result) {
-                    await refreshDonationStatus(data.order_id);
-                    alert('Transaksi dibuat dan menunggu pembayaran.');
-                    window.location.reload();
-                },
-                onError: async function(result) {
-                    await refreshDonationStatus(data.order_id);
-                    alert('Pembayaran gagal. Silakan coba lagi.');
-                    window.location.reload();
-                },
-                onClose: function() {
-                    donateBtn.disabled = false;
-                    donateBtn.innerHTML = originalContent;
-                    updateDonateButton();
-                },
-            });
-        } catch (error) {
-            this.disabled = false;
-            this.innerHTML = originalContent;
-            updateDonateButton();
-            alert(error.message || 'Terjadi kesalahan saat memproses donasi.');
         }
-    });
 
-    async function refreshDonationStatus(orderId) {
-        await fetch(refreshStatusUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-            },
-            body: JSON.stringify({ order_id: orderId }),
-        });
+        // Initialize button state
+        updateDonateButton();
     }
-
-    // Initialize button state
-    updateDonateButton();
 });
 </script>
 @endpush

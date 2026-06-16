@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('allocations', function (Blueprint $table) {
             $table->integer('allocation_id', true);
             $table->integer('campaign_id')->index('campaign_id');
-            $table->enum('category', ['pohon', 'pendidikan', 'operasional'])->index('idx_allocation_category');
+            $table->enum('metode', ['cash', 'transfer', 'lainnya'])->default('cash');
+            $table->string('penerima');
             $table->decimal('amount_used', 15);
             $table->text('description')->nullable();
             $table->timestamp('created_at')->useCurrent();

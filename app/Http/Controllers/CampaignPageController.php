@@ -54,7 +54,7 @@ class CampaignPageController extends Controller
         $completedCampaigns = Campaign::query()
             ->withCount($donorsCount)
             ->withSum($collectedAmount, 'amount')
-            ->whereIn('status', ['completed', 'complete'])
+            ->whereIn('status', ['completed', 'complete', 'telah_disalurkan'])
             ->orderBy('campaign_id', 'desc')
             ->get();
 
@@ -78,7 +78,7 @@ class CampaignPageController extends Controller
                 'donations as collected_amount' => fn ($query) => $query->where('payment_status', 'success'),
             ], 'amount')
             ->where('campaign_id', $campaign)
-            ->whereIn('status', ['active', 'completed', 'complete'])
+            ->whereIn('status', ['active', 'completed', 'complete', 'telah_disalurkan'])
             ->firstOrFail();
 
         return view('pages.detail-donation', compact('campaign'));

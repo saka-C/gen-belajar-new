@@ -31,6 +31,21 @@ class CampaignsTable
                     ->money('IDR')
                     ->sortable(),
 
+                TextColumn::make('total_allocated')
+                    ->label('Penyaluran')
+                    ->money('IDR')
+                    ->getStateUsing(function ($record) {
+                        return $record->allocations()->sum('amount_used') ?? 0;
+                    }),
+
+                TextColumn::make('remaining_balance')
+                    ->label('Sisa Saldo')
+                    ->money('IDR')
+                    ->getStateUsing(function ($record) {
+                        $totalAllocated = $record->allocations()->sum('amount_used') ?? 0;
+                        return max(0, $record->current_amount - $totalAllocated);
+                    }),
+
                 TextColumn::make('progress_percentage')
                     ->label('Persentase Progress')
                     ->getStateUsing(function ($record) {
@@ -47,11 +62,19 @@ class CampaignsTable
                 TextColumn::make('status')
                     ->label('Status Program')
                     ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'active'           => 'Aktif',
+                        'completed'        => 'Selesai',
+                        'draft'            => 'Draft',
+                        'telah_disalurkan' => 'Telah Disalurkan',
+                        default            => ucfirst($state),
+                    })
                     ->color(fn (string $state): string => match ($state) {
-                        'active' => 'success',
-                        'completed' => 'gray',
-                        'draft' => 'warning',
-                        default => 'warning',
+                        'active'           => 'success',
+                        'completed'        => 'gray',
+                        'draft'            => 'warning',
+                        'telah_disalurkan' => 'info',
+                        default            => 'warning',
                     }),
             ])
             ->filters([

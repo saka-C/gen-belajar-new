@@ -94,6 +94,7 @@
                 :title="$campaign->title"
                 :description="\Illuminate\Support\Str::limit($campaign->description, 90)"
                 :report-url="route('campaigns.show', $campaign->campaign_id)"
+                :status="$campaign->status"
             />
         @empty
             <p class="text-gray-600">Belum ada program selesai.</p>

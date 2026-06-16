@@ -51,9 +51,10 @@ class CampaignForm
                 Select::make('status')
                     ->label('Status')
                     ->options([
-                        'draft' => 'Draft',
-                        'active' => 'Aktif',
-                        'completed' => 'Selesai',
+                        'draft'             => 'Draft',
+                        'active'            => 'Aktif',
+                        'completed'         => 'Selesai',
+                        'telah_disalurkan'  => 'Telah Disalurkan',
                     ])
                     ->default('draft')
                     ->required(),
