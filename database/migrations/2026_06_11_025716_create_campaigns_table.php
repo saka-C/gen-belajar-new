@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('campaigns', function (Blueprint $table) {
             $table->integer('campaign_id', true);
             $table->string('title');
+            $table->string('description');
             $table->decimal('target_amount', 15);
             $table->decimal('current_amount', 15)->nullable()->default(0);
             $table->enum('status', ['draft', 'active', 'completed'])->nullable()->default('draft')->index('idx_campaign_status');

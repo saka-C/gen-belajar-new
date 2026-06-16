@@ -1,8 +1,20 @@
-@props(['image', 'category', 'title', 'description', 'percentage', 'target', 'donors'])
+@props(['image', 'category', 'title', 'description', 'percentage', 'target', 'donors', 'href' => '#'])
+
+@php
+    $imageSrc = $image ?: 'images/elementary.jpg';
+
+    if (! \Illuminate\Support\Str::startsWith($imageSrc, ['http://', 'https://', '/'])) {
+        if (! \Illuminate\Support\Str::startsWith($imageSrc, ['images/', 'storage/'])) {
+            $imageSrc = 'storage/' . $imageSrc;
+        }
+
+        $imageSrc = asset($imageSrc);
+    }
+@endphp
 
 <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col md:flex-row gap-8">
     <div class="w-full md:w-1/2 h-64 overflow-hidden rounded-2xl">
-        <img src="{{ asset($image) }}" class="w-full h-full object-cover" alt="{{ $title }}">
+        <img src="{{ $imageSrc }}" class="w-full h-full object-cover" alt="{{ $title }}">
     </div>
     <div class="flex-1 flex flex-col justify-center">
         <span class="inline-block bg-red-100 text-red-600 text-xs font-bold px-3 py-1 rounded-full w-fit mb-4">{{ $category }}</span>
@@ -18,7 +30,7 @@
         </div>
         <div class="flex justify-between items-center">
             <span class="text-sm text-gray-500 flex items-center gap-1"><i class='bx bx-user'></i> {{ $donors }} Donatur</span>
-            <a href="/detail" class="text-primary font-bold">Donasi Sekarang &rarr;</a>
+            <a href="{{ $href }}" class="text-primary font-bold">Donasi Sekarang &rarr;</a>
         </div>
     </div>
 </div>

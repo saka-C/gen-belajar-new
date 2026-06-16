@@ -1,8 +1,25 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Donasi - Gen Belajar')
+@section('title', $campaign->title . ' - Gen Belajar')
 
 @section('content')
+
+@php
+    $imageSrc = $campaign->image ?: 'images/elementary.jpg';
+
+    if (! \Illuminate\Support\Str::startsWith($imageSrc, ['http://', 'https://', '/'])) {
+        if (! \Illuminate\Support\Str::startsWith($imageSrc, ['images/', 'storage/'])) {
+            $imageSrc = 'storage/' . $imageSrc;
+        }
+
+        $imageSrc = asset($imageSrc);
+    }
+
+    $currentAmount = $campaign->collected_amount ?? 0;
+    $targetAmount = $campaign->target_amount ?? 0;
+    $percentage = $targetAmount > 0 ? min(100, round(($currentAmount / $targetAmount) * 100, 1)) : 0;
+    $statusText = in_array($campaign->status, ['completed', 'complete']) ? 'Selesai' : 'Aktif';
+@endphp
 
 {{-- ===================== HERO SECTION ===================== --}}
 <div class="bg-gray-50 pt-8 px-4 sm:px-6 lg:px-8 mb-20">
@@ -16,15 +33,15 @@
                 <div class="relative w-full h-64 sm:h-80 lg:h-96 bg-gradient-to-br from-green-100 to-green-300 rounded-3xl overflow-hidden shadow-md group">
                     {{-- Image placeholder dengan gradient (ganti dengan img tag jika ada gambar) --}}
                     <img
-                        src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=400&fit=crop"
-                        alt="Program Reforestasi Hutan Tropis"
+                        src="{{ $imageSrc }}"
+                        alt="{{ $campaign->title }}"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     >
                     {{-- Overlay badge kategori --}}
                     <div class="absolute top-4 left-4">
                         <span class="inline-flex items-center gap-2 bg-red-600 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg">
                             <span class="w-2 h-2 bg-white rounded-full"></span>
-                            Lingkungan
+                            Program
                         </span>
                     </div>
                 </div>
@@ -32,7 +49,7 @@
                 {{-- Program Header --}}
                 <div class="mt-8">
                     <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight mb-3">
-                        Reforestasi Hutan Tropis Indonesia
+                        {{ $campaign->title }}
                     </h1>
                     <p class="text-gray-600 text-base sm:text-lg">
                         Inisiatif oleh
@@ -46,15 +63,15 @@
                     <div class="grid grid-cols-3 gap-4 mb-6">
                         <div>
                             <p class="text-xs font-semibold text-gray-600 uppercase mb-1">Terkumpul</p>
-                            <p class="text-2xl sm:text-3xl font-extrabold text-gray-900">Rp 127 Juta</p>
+                            <p class="text-2xl sm:text-3xl font-extrabold text-gray-900">Rp {{ number_format($currentAmount, 0, ',', '.') }}</p>
                         </div>
                         <div>
                             <p class="text-xs font-semibold text-gray-600 uppercase mb-1">Target</p>
-                            <p class="text-2xl sm:text-3xl font-extrabold text-gray-900">Rp 200 Juta</p>
+                            <p class="text-2xl sm:text-3xl font-extrabold text-gray-900">Rp {{ number_format($targetAmount, 0, ',', '.') }}</p>
                         </div>
                         <div>
-                            <p class="text-xs font-semibold text-gray-600 uppercase mb-1">Sisa Hari</p>
-                            <p class="text-2xl sm:text-3xl font-extrabold text-red-600">23</p>
+                            <p class="text-xs font-semibold text-gray-600 uppercase mb-1">Status</p>
+                            <p class="text-2xl sm:text-3xl font-extrabold text-red-600">{{ $statusText }}</p>
                         </div>
                     </div>
 
@@ -62,10 +79,10 @@
                     <div class="mb-4">
                         <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden shadow-inner">
                             <div class="bg-gradient-to-r from-red-500 to-red-600 h-full rounded-full transition-all duration-700 ease-out"
-                                 style="width: 63.5%;">
+                                 style="width: {{ $percentage }}%;">
                             </div>
                         </div>
-                        <p class="text-right text-xs font-semibold text-gray-600 mt-2">63.5% Terkumpul</p>
+                        <p class="text-right text-xs font-semibold text-gray-600 mt-2">{{ $percentage }}% Terkumpul</p>
                     </div>
 
                     {{-- Donors count --}}
@@ -74,7 +91,7 @@
                             <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
                         </svg>
                         <span>
-                            <span class="font-semibold text-gray-900">1,245</span> orang telah berdonasi
+                            <span class="font-semibold text-gray-900">{{ number_format($campaign->donors_count, 0, ',', '.') }}</span> orang telah berdonasi
                         </span>
                     </div>
                 </div>
@@ -104,15 +121,7 @@
                 <div id="tab-deskripsi" class="tab-content active mt-8 bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100">
                     <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Tentang Program Ini</h3>
                     <div class="space-y-6 text-gray-600 leading-relaxed">
-                        <p>
-                            Hutan tropis Indonesia adalah paru-paru dunia yang memberikan kontribusi signifikan terhadap regulasi iklim global.
-                            Namun, deforestasi dan kerusakan lingkungan terus mengancam ekosistem yang tak ternilai harganya ini.
-                        </p>
-                        <p>
-                            Program Reforestasi Hutan Tropis Indonesia kami bertujuan untuk menanam kembali lebih dari 100,000 pohon asli
-                            di berbagai wilayah yang telah mengalami kerusakan lingkungan. Setiap donasi Anda akan langsung berkontribusi
-                            pada pemulihan ekosistem dan peningkatan kualitas hidup masyarakat lokal.
-                        </p>
+                        <p>{{ $campaign->description }}</p>
 
                         {{-- <div class="bg-gray-50 rounded-xl p-4 sm:p-6 border border-gray-200 my-6">
                             <h4 class="text-lg font-semibold text-gray-900 mb-4">Alokasi Dana</h4>
@@ -171,11 +180,7 @@
                             </div>
                         </div> --}}
 
-                        <p>
-                            Dengan transparan penuh, kami melaporkan setiap penggunaan dana kepada donatur dan publik. Setiap tahapan
-                            program didokumentasikan dengan foto dan video, sehingga Anda dapat menyaksikan dampak nyata dari kontribusi
-                            Anda secara langsung.
-                        </p>
+                        <p>Dengan transparan penuh, kami melaporkan setiap penggunaan dana kepada donatur dan publik.</p>
                     </div>
                 </div>
 
@@ -222,53 +227,31 @@
                     <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100">
                         <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-6">Daftar Donatur</h3>
                         <div class="space-y-4">
-                            {{-- Donor item 1 --}}
-                            <div class="flex items-start gap-4 pb-4 border-b border-gray-200">
-                                <div class="w-10 h-10 bg-gradient-to-br from-red-400 to-red-600 rounded-full flex-shrink-0 flex items-center justify-center">
-                                    <span class="text-white font-bold text-sm">AW</span>
-                                </div>
-                                <div class="flex-1">
-                                    <p class="font-semibold text-gray-900 text-sm">Andi Wijaya</p>
-                                    <p class="text-gray-600 text-xs">Berdonasi Rp 500.000</p>
-                                </div>
-                                <span class="text-red-600 text-xs font-semibold">3 hari lalu</span>
-                            </div>
+                            @forelse ($campaign->donations as $donation)
+                                @php
+                                    $donorName = $donation->is_anonymous
+                                        ? 'Anonim'
+                                        : ($donation->user->username ?? $donation->guest_name ?? 'Donatur');
+                                    $initials = collect(explode(' ', $donorName))
+                                        ->filter()
+                                        ->take(2)
+                                        ->map(fn ($word) => \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($word, 0, 1)))
+                                        ->implode('');
+                                @endphp
 
-                            {{-- Donor item 2 --}}
-                            <div class="flex items-start gap-4 pb-4 border-b border-gray-200">
-                                <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex-shrink-0 flex items-center justify-center">
-                                    <span class="text-white font-bold text-sm">SR</span>
+                                <div class="flex items-start gap-4 pb-4 border-b border-gray-200">
+                                    <div class="w-10 h-10 bg-gradient-to-br from-red-400 to-red-600 rounded-full flex-shrink-0 flex items-center justify-center">
+                                        <span class="text-white font-bold text-sm">{{ $initials ?: 'D' }}</span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-semibold text-gray-900 text-sm">{{ $donorName }}</p>
+                                        <p class="text-gray-600 text-xs">Berdonasi Rp {{ number_format($donation->amount, 0, ',', '.') }}</p>
+                                    </div>
+                                    <span class="text-red-600 text-xs font-semibold">Sukses</span>
                                 </div>
-                                <div class="flex-1">
-                                    <p class="font-semibold text-gray-900 text-sm">Siti Rahayu</p>
-                                    <p class="text-gray-600 text-xs">Berdonasi Rp 1.000.000</p>
-                                </div>
-                                <span class="text-gray-500 text-xs font-semibold">1 minggu lalu</span>
-                            </div>
-
-                            {{-- Donor item 3 --}}
-                            <div class="flex items-start gap-4 pb-4 border-b border-gray-200">
-                                <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex-shrink-0 flex items-center justify-center">
-                                    <span class="text-white font-bold text-sm">BL</span>
-                                </div>
-                                <div class="flex-1">
-                                    <p class="font-semibold text-gray-900 text-sm">Bambang Laksono</p>
-                                    <p class="text-gray-600 text-xs">Berdonasi Rp 2.500.000</p>
-                                </div>
-                                <span class="text-gray-500 text-xs font-semibold">2 minggu lalu</span>
-                            </div>
-
-                            {{-- Donor item 4 --}}
-                            <div class="flex items-start gap-4">
-                                <div class="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex-shrink-0 flex items-center justify-center">
-                                    <span class="text-white font-bold text-sm">DE</span>
-                                </div>
-                                <div class="flex-1">
-                                    <p class="font-semibold text-gray-900 text-sm">Dewi Ekawati</p>
-                                    <p class="text-gray-600 text-xs">Berdonasi Rp 750.000</p>
-                                </div>
-                                <span class="text-gray-500 text-xs font-semibold">3 minggu lalu</span>
-                            </div>
+                            @empty
+                                <p class="text-gray-600 text-sm">Belum ada donatur yang ditampilkan.</p>
+                            @endforelse
                         </div>
                     </div>
                 </div>

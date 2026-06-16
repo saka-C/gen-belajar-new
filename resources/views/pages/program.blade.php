@@ -62,37 +62,42 @@
         </div>
     </div>
 
-    <div id="content-active">
-        <x-active-program-card
-            image="images/elementary.jpg"
-            category="Pendidikan"
-            title="Renovasi SDN 04 Merauke"
-            description="Membangun 4 ruang kelas baru dan perpustakaan digital terintegrasi untuk anak-anak di perbatasan."
-            percentage="60"
-            target="Rp 200.000.000"
-            donors="24"
-        />
+    <div id="content-active" class="space-y-8">
+        @forelse ($activeCampaigns as $campaign)
+            @php
+                $currentAmount = $campaign->collected_amount ?? 0;
+                $percentage = $campaign->target_amount > 0
+                    ? min(100, round(($currentAmount / $campaign->target_amount) * 100, 1))
+                    : 0;
+            @endphp
+
+            <x-active-program-card
+                :image="$campaign->image"
+                category="Program"
+                :title="$campaign->title"
+                :description="\Illuminate\Support\Str::limit($campaign->description, 140)"
+                :percentage="$percentage"
+                :target="'Rp ' . number_format($campaign->target_amount, 0, ',', '.')"
+                :donors="$campaign->donors_count"
+                :href="route('campaigns.show', $campaign->campaign_id)"
+            />
+        @empty
+            <p class="text-gray-600">Belum ada program aktif.</p>
+        @endforelse
     </div>
 
     <div id="content-finished" class="hidden grid grid-cols-1 md:grid-cols-3 gap-8">
-        <x-finish-program-card
-            image="images/books.png"
-            category="Pendidikan"
-            title="Pusat Belajar Adat Papua"
-            description="IMPAK: 450 SISWA TERFASILITASI"
-        />
-        <x-finish-program-card
-            image="images/mangrove.png"
-            category="Lingkungan"
-            title="Reboisasi Mangrove"
-            description="IMPAK: 5 Hektar Hutan Baru"
-        />
-        <x-finish-program-card
-            image="images/water.png"
-            category="Kesehatan"
-            title="Air Bersih NTT"
-            description="IMPAK: 3 Desa Terlayani"
-        />
+        @forelse ($completedCampaigns as $campaign)
+            <x-finish-program-card
+                :image="$campaign->image"
+                category="Program"
+                :title="$campaign->title"
+                :description="\Illuminate\Support\Str::limit($campaign->description, 90)"
+                :report-url="route('campaigns.show', $campaign->campaign_id)"
+            />
+        @empty
+            <p class="text-gray-600">Belum ada program selesai.</p>
+        @endforelse
     </div>
 </section>
 

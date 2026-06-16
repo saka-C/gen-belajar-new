@@ -55,29 +55,6 @@
             </a>
         @endauth
 
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-
-            <button type="submit" class="w-full text-left px-5 py-3 hover:bg-gray-100 text-red-600">
-                Logout
-            </button>
-        </form>
-
-    </div>
-
-</div>
-
-@else
-
-<a href="{{ route('login') }}"
-    class="hidden md:inline-flex font-inter items-center justify-center px-8 py-3 bg-primary rounded-full text-white text-sm font-normal tracking-[0.70px] shadow-[0px_4px_6px_-1px_#0000001a] hover:bg-[#ba000c] transition-colors cursor-pointer">
-
-    Bergabung
-
-</a>
-
-@endauth
-
         <button id="hamburger-btn" class="flex md:hidden flex-col justify-center items-center w-8 h-8 gap-2 relative z-50 cursor-pointer focus:outline-none" aria-label="Toggle Menu">
             <span id="line-top" class="w-6 h-0.5 bg-[#5f5e5e] transition-all duration-300 ease-in-out transform origin-center"></span>
             <span id="line-bottom" class="w-6 h-0.5 bg-[#5f5e5e] transition-all duration-300 ease-in-out transform origin-center"></span>
