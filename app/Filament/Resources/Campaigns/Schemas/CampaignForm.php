@@ -6,6 +6,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 
 class CampaignForm
@@ -48,6 +49,7 @@ class CampaignForm
                     ->default(0.00),
 
                 Select::make('status')
+                    ->label('Status')
                     ->options([
                         'draft' => 'Draft',
                         'active' => 'Aktif',
@@ -55,6 +57,11 @@ class CampaignForm
                     ])
                     ->default('draft')
                     ->required(),
+
+                Toggle::make('is_pinned')
+                    ->label('Pin Kampanye')
+                    ->helperText('Centang untuk menampilkan kampanye ini di halaman utama.')
+                    ->default(false),
             ]);
     }
 }

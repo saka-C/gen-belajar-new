@@ -301,6 +301,21 @@
                         </div>
                     </div>
 
+                    {{-- Donor name --}}
+                    <div class="mb-6">
+                        <label for="guest_name" class="block text-xs font-semibold text-gray-700 uppercase mb-2">Nama Donatur</label>
+                        <input
+                            type="text"
+                            id="guest_name"
+                            name="guest_name"
+                            maxlength="100"
+                            placeholder="Nama Anda..."
+                            value="{{ auth()->user()->username ?? '' }}"
+                            class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 text-sm
+                                   focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all"
+                        >
+                    </div>
+
                     {{-- Message (optional) --}}
                     <div class="mb-6">
                         <label for="message" class="block text-xs font-semibold text-gray-700 uppercase mb-2">Pesan & Doa (Opsional)</label>
@@ -371,8 +386,16 @@
 @endsection
 
 @push('scripts')
+<script
+    src="{{ config('services.midtrans.snap_js_url') }}"
+    data-client-key="{{ config('services.midtrans.client_key') }}"
+></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const csrfToken = '{{ csrf_token() }}';
+    const createSnapUrl = '{{ route('donations.midtrans.snap') }}';
+    const refreshStatusUrl = '{{ route('donations.midtrans.status') }}';
+    const campaignId = {{ $campaign->campaign_id }};
 
     // ===================== TAB NAVIGATION =====================
     const tabButtons = document.querySelectorAll('.tab-button');
@@ -456,9 +479,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ===================== DONATE BUTTON ACTION =====================
-    donateBtn.addEventListener('click', function(e) {
+    donateBtn.addEventListener('click', async function(e) {
         const amount = parseInt(amountInput.value) || 0;
-        const message = document.getElementById('message').value;
+        const guestName = document.getElementById('guest_name').value;
         const anonymous = document.getElementById('anonymous').checked;
 
         if (amount < 1000) {
@@ -476,17 +499,78 @@ document.addEventListener('DOMContentLoaded', function() {
             Memproses...
         `;
 
-        // Simulasi proses (ganti dengan API call yang sebenarnya)
-        setTimeout(() => {
+        try {
+            const response = await fetch(createSnapUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                },
+                body: JSON.stringify({
+                    campaign_id: campaignId,
+                    amount: amount,
+                    guest_name: guestName,
+                    is_anonymous: anonymous,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (! response.ok) {
+                throw new Error(data.message || 'Transaksi tidak dapat dibuat.');
+            }
+
+            if (! window.snap || ! data.snap_token) {
+                if (data.redirect_url) {
+                    window.location.href = data.redirect_url;
+                    return;
+                }
+
+                throw new Error('Midtrans Snap belum siap. Muat ulang halaman lalu coba lagi.');
+            }
+
+            window.snap.pay(data.snap_token, {
+                onSuccess: async function(result) {
+                    await refreshDonationStatus(data.order_id);
+                    alert('Terima kasih! Pembayaran donasi Anda berhasil.');
+                    window.location.reload();
+                },
+                onPending: async function(result) {
+                    await refreshDonationStatus(data.order_id);
+                    alert('Transaksi dibuat dan menunggu pembayaran.');
+                    window.location.reload();
+                },
+                onError: async function(result) {
+                    await refreshDonationStatus(data.order_id);
+                    alert('Pembayaran gagal. Silakan coba lagi.');
+                    window.location.reload();
+                },
+                onClose: function() {
+                    donateBtn.disabled = false;
+                    donateBtn.innerHTML = originalContent;
+                    updateDonateButton();
+                },
+            });
+        } catch (error) {
             this.disabled = false;
             this.innerHTML = originalContent;
-            alert(`Terima kasih! Donasi Rp ${amount.toLocaleString('id-ID')} Anda akan diproses.`);
-            amountInput.value = '';
-            document.getElementById('message').value = '';
-            document.getElementById('anonymous').checked = false;
             updateDonateButton();
-        }, 2000);
+            alert(error.message || 'Terjadi kesalahan saat memproses donasi.');
+        }
     });
+
+    async function refreshDonationStatus(orderId) {
+        await fetch(refreshStatusUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+            },
+            body: JSON.stringify({ order_id: orderId }),
+        });
+    }
 
     // Initialize button state
     updateDonateButton();

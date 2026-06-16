@@ -43,6 +43,7 @@
 
                 <div class="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                     <a href="/profile" class="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-t-xl transition">Lihat Profil</a>
+                    <a href="{{ route('notifications') }}" class="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition">Notifikasi</a>
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button type="submit" class="block w-full text-left px-4 py-3 text-sm font-medium text-[#ba000c] hover:bg-red-50 rounded-b-xl transition">Logout</button>
@@ -84,6 +85,7 @@
                 <span class="text-sm font-semibold text-gray-700 truncate">{{ Auth::user()->username }}</span>
             </div>
             <a href="/profile" class="text-sm font-medium text-[#5f5e5e] hover:text-[#ba000c] transition-all py-2 border-b border-gray-100">Lihat Profil</a>
+            <a href="{{ route('notifications') }}" class="text-sm font-medium text-[#5f5e5e] hover:text-[#ba000c] transition-all py-2 border-b border-gray-100">Notifikasi</a>
             <form action="{{ route('logout') }}" method="POST" class="w-full mt-2">
                 @csrf
                 <button type="submit" class="w-full py-3 border border-[#ba000c] text-[#ba000c] rounded-full text-center text-sm font-semibold hover:bg-[#ba000c] hover:text-white transition-colors cursor-pointer">

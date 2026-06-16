@@ -6,6 +6,34 @@ use App\Models\Campaign;
 
 class CampaignPageController extends Controller
 {
+    public function home()
+    {
+        $donorsCount = [
+            'donations as donors_count' => fn ($query) => $query->where('payment_status', 'success'),
+        ];
+
+        $collectedAmount = [
+            'donations as collected_amount' => fn ($query) => $query->where('payment_status', 'success'),
+        ];
+
+        $pinnedCampaign = Campaign::query()
+            ->withCount($donorsCount)
+            ->withSum($collectedAmount, 'amount')
+            ->where('status', 'active')
+            ->where('is_pinned', true)
+            ->first();
+
+        $activeCampaigns = Campaign::query()
+            ->withCount($donorsCount)
+            ->withSum($collectedAmount, 'amount')
+            ->where('status', 'active')
+            ->where('is_pinned', false)
+            ->orderBy('campaign_id', 'desc')
+            ->get();
+
+        return view('index', compact('pinnedCampaign', 'activeCampaigns'));
+    }
+
     public function index()
     {
         $donorsCount = [

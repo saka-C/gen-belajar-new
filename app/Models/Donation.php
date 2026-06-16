@@ -47,6 +47,8 @@ class Donation extends Model
 		'guest_name',
 		'payment_method',
 		'transaction_id',
+		'snap_token',
+		'snap_redirect_url',
 		'payment_status'
 	];
 

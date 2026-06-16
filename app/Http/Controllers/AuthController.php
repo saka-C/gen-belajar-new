@@ -76,6 +76,7 @@ class AuthController extends Controller
             'email' => $socialiteUser->getEmail(),
         ], [
             'username' => $socialiteUser->getName(),
+            'google_id' => $socialiteUser->getId(),
             'auth_provider' => 'google',
         ]);
 
