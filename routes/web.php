@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CampaignPageController;
 use App\Http\Controllers\ProfileController;
-use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,16 +11,19 @@ use Laravel\Socialite\Facades\Socialite;
 |--------------------------------------------------------------------------
 */
 
-// 1. Rute Halaman Statis (Publik)
+// =========================================================================
+// 1. PUBLIK — Bisa diakses siapa saja (tamu & user yang sudah login)
+// =========================================================================
 Route::view('/', 'index');
 Route::view('/tentang', 'pages.about');
-Route::view('/program', 'pages.program');
+Route::get('/program', [CampaignPageController::class, 'index'])->name('program');
 Route::view('/artikel', 'pages.artikel');
 Route::view('/kontak', 'pages.contact');
-Route::view('/detail', 'pages.detail-donation');
+Route::get('/detail/{campaign}', [CampaignPageController::class, 'show'])->name('campaigns.show');
 
-// 2. Rute untuk Tamu (Guest)
-// Hanya bisa diakses jika user BELUM login
+// =========================================================================
+// 2. TAMU — Hanya bisa diakses jika BELUM login
+// =========================================================================
 Route::middleware('guest')->group(function () {
     Route::view('/login', 'auth.login')->name('login');
     Route::view('/register', 'auth.register')->name('register');
@@ -29,16 +32,25 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 });
 
-// 3. Rute Login Google (Socialite)
+// =========================================================================
+// 3. LOGIN GOOGLE (Socialite) — Tidak perlu middleware
+// =========================================================================
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
-// 4. Rute yang Memerlukan Login
-Route::middleware(['auth'])->group(function () {
-    // Profil
+// =========================================================================
+// 4. DONATUR — Sudah login dengan role 'donatur'
+// =========================================================================
+Route::middleware(['auth', 'role:donatur'])->group(function () {
+    Route::view('/dashboard', 'dashboard.index')->name('dashboard');
+
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+});
 
-    // Logout (Harus di dalam middleware auth agar aman)
+// =========================================================================
+// 5. SEMUA USER LOGIN — Logout bisa dilakukan role apapun
+// =========================================================================
+Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

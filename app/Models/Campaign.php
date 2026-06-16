@@ -14,10 +14,11 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property int $campaign_id
  * @property string $title
+ * @property string $description
  * @property float $target_amount
  * @property float|null $current_amount
+ * @property string|null $image
  * @property string|null $status
- * 
  * @property Collection|Allocation[] $allocations
  * @property Collection|Donation[] $donations
  *
@@ -36,18 +37,20 @@ class Campaign extends Model
 
 	protected $fillable = [
 		'title',
+		'description',
 		'target_amount',
 		'current_amount',
+		'image',
 		'status'
 	];
 
 	public function allocations()
 	{
-		return $this->hasMany(Allocation::class);
+		return $this->hasMany(Allocation::class, 'campaign_id', 'campaign_id');
 	}
 
 	public function donations()
 	{
-		return $this->hasMany(Donation::class);
+		return $this->hasMany(Donation::class, 'campaign_id', 'campaign_id');
 	}
 }

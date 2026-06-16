@@ -34,6 +34,7 @@ class AuthController extends Controller
     // 2. Proses Login (Manual)
     public function login(Request $request)
     {
+        // dd($request->all());
         $credentials = $request->validate([
             'email'    => 'required|email',
             'password' => 'required',
@@ -44,7 +45,7 @@ class AuthController extends Controller
         // atau gunakan Hash::check() manual
         if (Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']])) {
             $request->session()->regenerate();
-            return redirect('/')->with('success', 'Selamat datang kembali!');
+            return $this->redirectByRole(Auth::user());
         }
 
         return back()->withErrors(['email' => 'Email atau password salah.']);
@@ -89,6 +90,15 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect('/profile');
+        return $this->redirectByRole($user);
+    }
+
+    // Helper: Tentukan tujuan redirect berdasarkan role user
+    private function redirectByRole($user)
+    {
+        return match ($user->role) {
+            'admin', 'volunteer' => redirect('/admin')->with('success', 'Selamat datang, ' . $user->username . '!'),
+            default              => redirect('/')->with('success', 'Selamat datang kembali, ' . $user->username . '!'),
+        };
     }
 }

@@ -55,7 +55,6 @@
             </a>
         @endauth
 
-
         <button id="hamburger-btn" class="flex md:hidden flex-col justify-center items-center w-8 h-8 gap-2 relative z-50 cursor-pointer focus:outline-none" aria-label="Toggle Menu">
             <span id="line-top" class="w-6 h-0.5 bg-[#5f5e5e] transition-all duration-300 ease-in-out transform origin-center"></span>
             <span id="line-bottom" class="w-6 h-0.5 bg-[#5f5e5e] transition-all duration-300 ease-in-out transform origin-center"></span>

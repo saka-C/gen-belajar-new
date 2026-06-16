@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -42,8 +45,27 @@ class User extends Authenticatable
         return 'password_hash';
     }
     // Di dalam class User
-public function profile()
-{
-    return $this->hasOne(Profile::class, 'user_id', 'user_id');
-}
+    public function profile()
+    {
+        return $this->hasOne(Profile::class, 'user_id', 'user_id');
+    }
+
+    // Filament: hanya admin dan volunteer yang boleh akses panel
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return in_array($this->role, ['admin', 'volunteer']);
+    }
+    // Filament v5 membaca $user->name — kita petakan ke kolom 'username'
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->username ?? 'User',
+        );
+    }
+
+    // Fallback untuk kompatibilitas Filament v3/v4
+    public function getFilamentName(): string
+    {
+        return $this->username ?? 'User';
+    }
 }
