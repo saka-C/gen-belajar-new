@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $guest_name
  * @property string|null $payment_method
  * @property string $transaction_id
+ * @property string|null $message
  * @property string|null $payment_status
  * 
  * @property User|null $user
@@ -45,6 +46,7 @@ class Donation extends Model
 		'amount',
 		'is_anonymous',
 		'guest_name',
+		'message',
 		'payment_method',
 		'transaction_id',
 		'snap_token',

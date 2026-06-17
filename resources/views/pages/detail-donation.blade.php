@@ -511,6 +511,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const amount = parseInt(amountInput.value) || 0;
             const guestName = document.getElementById('guest_name').value;
             const anonymous = document.getElementById('anonymous').checked;
+            const message = document.getElementById('message').value;
 
             if (amount < 1000) {
                 alert('Nominal donasi minimal Rp 1.000');
@@ -540,6 +541,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         amount: amount,
                         guest_name: guestName,
                         is_anonymous: anonymous,
+                        message: message,
                     }),
                 });
 

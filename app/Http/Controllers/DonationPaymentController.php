@@ -17,9 +17,10 @@ class DonationPaymentController extends Controller
     {
         $validated = $request->validate([
             'campaign_id' => ['required', 'integer', 'exists:campaigns,campaign_id'],
-            'amount' => ['required', 'integer', 'min:1000'],
-            'guest_name' => ['nullable', 'string', 'max:100'],
-            'is_anonymous' => ['nullable', 'boolean'],
+            'amount'      => ['required', 'integer', 'min:1000'],
+            'guest_name'  => ['nullable', 'string', 'max:100'],
+            'is_anonymous'=> ['nullable', 'boolean'],
+            'message'     => ['nullable', 'string', 'max:500'],
         ]);
 
         $campaign = Campaign::query()
@@ -47,9 +48,10 @@ class DonationPaymentController extends Controller
 
             if ($donation) {
                 $donation->update([
-                    'amount' => $validated['amount'],
+                    'amount'       => $validated['amount'],
                     'is_anonymous' => (bool) ($validated['is_anonymous'] ?? false),
-                    'guest_name' => null,
+                    'guest_name'   => null,
+                    'message'      => $validated['message'] ?? null,
                     'payment_method' => 'midtrans',
                 ]);
 
@@ -57,11 +59,12 @@ class DonationPaymentController extends Controller
             }
 
             return Donation::create([
-                'user_id' => $user?->user_id,
-                'campaign_id' => $campaign->campaign_id,
-                'amount' => $validated['amount'],
-                'is_anonymous' => (bool) ($validated['is_anonymous'] ?? false),
-                'guest_name' => $user ? null : ($guestName ?: 'Donatur'),
+                'user_id'        => $user?->user_id,
+                'campaign_id'    => $campaign->campaign_id,
+                'amount'         => $validated['amount'],
+                'is_anonymous'   => (bool) ($validated['is_anonymous'] ?? false),
+                'guest_name'     => $user ? null : ($guestName ?: 'Donatur'),
+                'message'        => $validated['message'] ?? null,
                 'payment_method' => 'midtrans',
                 'transaction_id' => $this->generateOrderId($campaign->campaign_id),
                 'payment_status' => 'pending',

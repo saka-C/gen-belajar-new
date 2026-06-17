@@ -33,14 +33,21 @@ class DonasisTable
                     ->money('IDR')
                     ->sortable(),
 
+                TextColumn::make('message')
+                    ->label('Pesan & Doa')
+                    ->limit(60)
+                    ->tooltip(fn ($record) => $record->message)
+                    ->placeholder('—')
+                    ->wrap(),
+
                 TextColumn::make('payment_status')
                     ->label('Status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'success' => 'success',
                         'pending' => 'warning',
-                        'failed' => 'danger',
-                        default => 'gray',
+                        'failed'  => 'danger',
+                        default   => 'gray',
                     })
                     ->sortable(),
 

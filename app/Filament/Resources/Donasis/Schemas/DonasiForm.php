@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Donasis\Schemas;
 
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
@@ -30,6 +31,13 @@ class DonasiForm
                 ->required()
                 ->label('Nominal'),
 
+            Textarea::make('message')
+                ->label('Pesan & Doa Donatur')
+                ->placeholder('Donatur tidak mengisi pesan.')
+                ->rows(3)
+                ->nullable()
+                ->columnSpanFull(),
+
             TextInput::make('payment_method')
                 ->default('qris')
                 ->required()
@@ -43,7 +51,7 @@ class DonasiForm
                 ->options([
                     'pending' => 'Pending',
                     'success' => 'Success',
-                    'failed' => 'Failed',
+                    'failed'  => 'Failed',
                 ])
                 ->default('pending')
                 ->required()

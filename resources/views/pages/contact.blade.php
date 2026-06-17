@@ -68,7 +68,7 @@
                 </span>
                 <div>
                     <p class="text-xs font-bold text-gray-700 mb-0.5">Email</p>
-                    <p class="text-sm text-gray-500">halo@genbelajar.org</p>
+                    <p class="text-sm text-gray-500">mokotekmuhammad@gmail.com</p>
                 </div>
             </div>
 
